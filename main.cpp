@@ -16,26 +16,34 @@ int main()
     int totalProducts{};
     int premiumCount{};
     std::string itemName{};
-    std::string expensiveItem{};
+    std::string expensiveItemName{"None"};
 
     while (true)
     {
         // Display current session statistics formatted with tabs
-        std::cout << "N.Products: " << totalProducts << "\t" << "N.Premium: " << premiumCount << '\t' << "Total: $" << totalSum << '\n';
-        std::cout << "-------------------------------------------------" << "\n\n";
-        std::cout << "Please enter the value of the product (or 0 to exit): ";
-        std::cin >> price;
+        std::cout << "N.Products: " << totalProducts << "\t" << "N.Premium: " << premiumCount << "\tMost Expensive Product: " << expensiveItemName << '\t' << "Total: $" << totalSum << '\n';
+        std::cout << "---------------------------------------------------------------------------" << '\n';
+        std::cout << "\t(to close the program write 'exit' in the product section)" << "\n\n";
 
-        // Sentinel value to terminate the loop
-        if (price == 0 || itemName == "exit")
+        std::cout << "Enter the product: ";
+        std::getline(std::cin >> std::ws, itemName);
+        if (itemName == "exit")
         {
             break;
         }
-        else if (bool premium{isPremium(price)})
+
+        std::cout << "Please enter the price of " << itemName << ": ";
+        std::cin >> price;
+
+        if (bool premium{isPremium(price)})
         {
             ++premiumCount;
         }
-
+        if (price > maxPrice)
+        {
+            maxPrice = price;
+            expensiveItemName = itemName;
+        }
         // Update cumulative totals
         ++totalProducts;
         totalSum += price;
