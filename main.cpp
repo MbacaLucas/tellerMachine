@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 // Evaluates if a product qualifies for premium status based on price
 bool isPremium(double price)
@@ -11,8 +12,11 @@ int main()
     // Initialize variables using uniform initialization
     double price{};
     double totalSum{};
+    double maxPrice{0.0};
     int totalProducts{};
     int premiumCount{};
+    std::string itemName{};
+    std::string expensiveItem{};
 
     while (true)
     {
@@ -23,7 +27,7 @@ int main()
         std::cin >> price;
 
         // Sentinel value to terminate the loop
-        if (price == 0)
+        if (price == 0 || itemName == "exit")
         {
             break;
         }
