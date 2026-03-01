@@ -34,6 +34,11 @@ int main()
 
         std::cout << "Please enter the price of " << itemName << ": ";
         std::cin >> price;
+        if (price < 0)
+        {
+            std::cout << "Error: Negative price! Let's start this product again.\n";
+            continue;
+        }
 
         if (bool premium{isPremium(price)})
         {
