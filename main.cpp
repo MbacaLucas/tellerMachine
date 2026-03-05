@@ -1,10 +1,28 @@
 #include <iostream>
 #include <string>
 
+// Display current session statistics formatted with tabs
+void displayHeader(double totalSum, int totalProducts, int premiumCount, std::string expensiveItemName)
+{
+    // Display current session statistics formatted with tabs
+    std::cout << "N.Products: " << totalProducts << "\t" << "N.Premium: " << premiumCount << "\tMost Expensive Product: " << expensiveItemName << '\t' << "Total: $" << totalSum << '\n';
+    std::cout << "---------------------------------------------------------------------------" << '\n';
+    std::cout << "\t(to close the program write 'exit' in the product section)" << "\n\n";
+}
+
 // Evaluates if a product qualifies for premium status based on price
 bool isPremium(double price)
 {
     return price >= 100.0;
+}
+
+// Finish the program showing the detail bill
+void printRecibe(int totalProducts, int premiumCount, double totalSum)
+{
+    std::cout << "\n====================================\n";
+    std::cout << "Regular Products: " << totalProducts - premiumCount << "  Premium Products: " << premiumCount << "   total Items: " << totalProducts << '\n';
+    std::cout << "Final Total: $" << totalSum << '\n';
+    std::cout << "Program finished!\n";
 }
 
 int main()
@@ -20,10 +38,7 @@ int main()
 
     while (true)
     {
-        // Display current session statistics formatted with tabs
-        std::cout << "N.Products: " << totalProducts << "\t" << "N.Premium: " << premiumCount << "\tMost Expensive Product: " << expensiveItemName << '\t' << "Total: $" << totalSum << '\n';
-        std::cout << "---------------------------------------------------------------------------" << '\n';
-        std::cout << "\t(to close the program write 'exit' in the product section)" << "\n\n";
+        displayHeader(totalSum, totalProducts, premiumCount, expensiveItemName);
 
         std::cout << "Enter the product: ";
         std::getline(std::cin >> std::ws, itemName);
@@ -54,7 +69,7 @@ int main()
         totalSum += price;
     }
 
-    std::cout << "Program finished!";
+    printRecibe(totalProducts, premiumCount, totalSum);
 
     return 0;
 }
