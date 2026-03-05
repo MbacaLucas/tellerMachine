@@ -21,8 +21,19 @@ void printRecibe(int totalProducts, int premiumCount, double totalSum)
 {
     std::cout << "\n====================================\n";
     std::cout << "Regular Products: " << totalProducts - premiumCount << "  Premium Products: " << premiumCount << "   total Items: " << totalProducts << '\n';
+
+    if (totalProducts >= 5)
+    {
+        std::cout << "DISCOUNT APPLIED: 10 of descount for volume purchase!\n";
+    }
+
     std::cout << "Final Total: $" << totalSum << '\n';
     std::cout << "Program finished!\n";
+}
+
+double applyDiscount(double totalSum, int totalProducts)
+{
+    return (totalProducts >= 5) ? totalSum * 0.9 : totalSum;
 }
 
 int main()
@@ -68,6 +79,8 @@ int main()
         ++totalProducts;
         totalSum += price;
     }
+
+    totalSum = applyDiscount(totalSum, totalProducts);
 
     printRecibe(totalProducts, premiumCount, totalSum);
 
