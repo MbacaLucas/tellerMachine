@@ -1,55 +1,67 @@
 #include <iostream>
 #include <string>
 
-// Display current session statistics formatted with tabs
-void displayHeader(double totalSum, int totalProducts, int premiumCount, std::string expensiveItemName)
-{
-    // Display current session statistics formatted with tabs
-    std::cout << "N.Products: " << totalProducts << "\t" << "N.Premium: " << premiumCount << "\tMost Expensive Product: " << expensiveItemName << '\t' << "Total: $" << totalSum << '\n';
-    std::cout << "---------------------------------------------------------------------------" << '\n';
-    std::cout << "\t(to close the program write 'exit' in the product section)" << "\n\n";
-}
-
 // Evaluates if a product qualifies for premium status based on price
 bool isPremium(double price)
 {
     return price >= 100.0;
 }
 
-// Finish the program showing the detail bill
-void printRecibe(int totalProducts, int premiumCount, double totalSum)
+double applyDiscount(double totalNetSum, int totalProducts)
 {
-    std::cout << "\n====================================\n";
-    std::cout << "Regular Products: " << totalProducts - premiumCount << "  Premium Products: " << premiumCount << "   total Items: " << totalProducts << '\n';
-
-    if (totalProducts >= 5)
-    {
-        std::cout << "DISCOUNT APPLIED: 10 of descount for volume purchase!\n";
-    }
-
-    std::cout << "Final Total: $" << totalSum << '\n';
-    std::cout << "Program finished!\n";
+    return (totalProducts >= 5) ? totalNetSum * 0.9 : totalNetSum;
 }
 
-double applyDiscount(double totalSum, int totalProducts)
+// Display current session statistics formatted with tabs
+void displayHeader(double totalNetSum, int totalProducts, int premiumCount, std::string expensiveItemName)
 {
-    return (totalProducts >= 5) ? totalSum * 0.9 : totalSum;
+    // Display current session statistics formatted with tabs
+    std::cout << "N.Products: " << totalProducts << "\t" << "N.Premium: " << premiumCount << "\tMost Expensive Product: " << expensiveItemName << '\t' << "Total: $" << totalNetSum << '\n';
+    std::cout << "---------------------------------------------------------------------------" << '\n';
+    std::cout << "\t(to close the program write 'exit' in the product section)" << "\n\n";
+}
+
+// show detail of the bill
+void printRecibe(int totalProducts, int premiumCount, double subtotal, double discount, double tax, double total)
+{
+    std::cout << "\n====================================\n";
+    std::cout << "          FINAL RECEIPT             \n";
+    std::cout << "====================================\n";
+    std::cout << "Regular Products: " << totalProducts - premiumCount << '\n';
+    std::cout << "Premium Products: " << premiumCount << '\n';
+    std::cout << "Total Items:      " << totalProducts << '\n';
+    std::cout << "------------------------------------\n";
+
+    std::cout << "Subtotal:        $" << subtotal << '\n';
+
+    // Solo mostramos la línea de descuento si realmente se aplicó
+    if (discount > 0)
+    {
+        std::cout << "Discount (10%): -$" << discount << '\n';
+    }
+
+    std::cout << "Tax (19%):       +$" << tax << '\n';
+    std::cout << "------------------------------------\n";
+    std::cout << "TOTAL TO PAY:    $" << total << '\n';
+    std::cout << "====================================\n";
+    std::cout << "Program finished!\n";
 }
 
 int main()
 {
     // Initialize variables using uniform initialization
+    constexpr double tax{0.19};
     double price{};
-    double totalSum{};
+    double totalNetSum{0.0};
     double maxPrice{0.0};
-    int totalProducts{};
-    int premiumCount{};
+    int totalProducts{0};
+    int premiumCount{0};
     std::string itemName{};
     std::string expensiveItemName{"None"};
 
     while (true)
     {
-        displayHeader(totalSum, totalProducts, premiumCount, expensiveItemName);
+        displayHeader(totalNetSum, totalProducts, premiumCount, expensiveItemName);
 
         std::cout << "Enter the product: ";
         std::getline(std::cin >> std::ws, itemName);
@@ -60,6 +72,7 @@ int main()
 
         std::cout << "Please enter the price of " << itemName << ": ";
         std::cin >> price;
+
         if (price < 0)
         {
             std::cout << "Error: Negative price! Let's start this product again.\n";
@@ -75,14 +88,19 @@ int main()
             maxPrice = price;
             expensiveItemName = itemName;
         }
+
         // Update cumulative totals
         ++totalProducts;
-        totalSum += price;
+        totalNetSum += price;
     }
 
-    totalSum = applyDiscount(totalSum, totalProducts);
+    double subtotal{totalNetSum};
+    double subtotalWithDiscount{applyDiscount(subtotal, totalProducts)};
+    double discountAmount{subtotal - subtotalWithDiscount};
+    double taxAmount{subtotalWithDiscount * tax};
+    double finalTotal{subtotalWithDiscount + taxAmount};
 
-    printRecibe(totalProducts, premiumCount, totalSum);
+    printRecibe(totalProducts, premiumCount, subtotal, discountAmount, taxAmount, finalTotal);
 
     return 0;
 }
